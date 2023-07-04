@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Tv Guys</title>
+        <script type="text/javascript" src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+      
+        <script src="../static/scripts/app.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../static/styles/style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <img src="../static/images/logo.png" alt="TheTvGuys" class="logo">
+                <a></a>
+                <ul>
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Store</a>
+                    </li>
+                    <li>
+                        <a href="#">Sign_In</a>
+                    </li>
+                    <li class="search">
+                        <a href="#"> Cart
+                            <i class="fa-regular fa-cart-shopping fa-bounce"></i>
+                        </a>
+                    </li>
+                    </li>
+                    <li class="hamburger">
+                        <a href="#">
+                            <div class="bar"></div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <img src="../static/images/bg1.png" class="parallax" id="bg-img">
+            <img src="../static/images/bg2.png" class="parallax" id="fg-img">
+            <img src="../static/images/logo" class="parallax" id="tv" width="60px">
+        </main>
+        <div class="slider">
+            <div class="slide-container">
+                {% for product in products %}
+                <div class="slide">
+                    <img src="{{ product.Image }}" class="slide-img-top" alt="Product Image" width="20vw">
+                    <h3 class="slide-header">{{ product.Name }}</h3>
+                    <p class="slide-text">{{ product.Description }}</p>
+                    <p class="slide-text">{{ product.Size }}</p>
+                    <p class="price">{{ product.Price - 1}} </p>
+                    <!-- Add other product attributes as needed -->
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <script src="../static/scripts/app.js"></script>
+
+    </body>
+</html>

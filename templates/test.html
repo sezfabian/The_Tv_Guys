@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>learn vue</title>
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	</head>
+	<body>
+		<h1>Hello, Vue</h1>
+		<div id="app">
+			<h2>This Tamplete</h2>
+		</div>
+		<script src="app.js"></script>
+	</body>
+</html>
+
+
+{% for product in products %}
+<div class="card">
+	<img src="{{ product.Image }}" class="card-img-top" alt="Product Image">
+	<div class="card-body">
+		<h5 class="card-title">{{ product.Name }}</h5>
+		<p class="card-text">{{ product.Size }}</p>
+		<p class="card-text">{{ product.Description }}</p>
+		<p class="card-text">{{ product.Price }}</p>
+	</div>
+</div>
+{% endfor %}
+
+<div id="app">
+	<div class="carousel">
+		<div class="viewport" id="carouselViewport" :style="{ transform: 'translateX(' + translateX + '%)' }">
+			{% for product in products %}
+			<div class="product" :class="{ 'focus': product === currentProduct }">
+				<div class="card">
+					<img src="{{ product.Image }}" class="card-img-top" alt="Product Image">
+					<div class="card-body">
+						<h5 class="card-title">{{ product.Name }}</h5>
+						<p class="card-text">{{ product.Size }}</p>
+						<p class="card-text">{{ product.Description }}</p>
+						<p class="card-text">{{ product.Price }}</p>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<button class="arrow left" @click="scroll(-1)">&lt;</button>
+		<button class="arrow right" @click="scroll(1)">&gt;</button>
+	</div>
+</div>
