@@ -74,7 +74,7 @@ def submit_product():
         image = request.form['image']
         stock = int(request.form['stock'])
 
-        # Save the product to the database or perform other operations
+        # Saves the product to the database
         product = Product(
             Name=name,
             Description=description,
@@ -94,11 +94,46 @@ def submit_product():
         )
         storage.new(product)
         storage.save()
-        # Display a success message
+        # Displays a success message
         flash('New product created successfully!', 'success')
         return redirect('/success')
     else:
         return render_template('product.html')
+        
+@app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    # Retrieve the product from the database
+    product = storage.get(Product, product_id)
+    if product is None:
+        # Handle case when product is not found
+        return "Product not found."
+
+    if request.method == 'POST':
+        # Update the product with the new form data
+        product.Name = request.form['name']
+        product.Description = request.form['description']
+        product.Cost = float(request.form['cost'])
+        product.Price = float(request.form['price'])
+        product.Brand = request.form['brand']
+        product.Size = request.form['size']
+        product.Os = request.form['os']
+        product.Dimensions = request.form['dimensions']
+        product.Resolution = request.form['resolution']
+        product.Warranty = int(request.form['warranty'])
+        product.Design = request.form['design']
+        product.Sub_cat_id = int(request.form['sub_cat_id'])
+        product.Category_id = int(request.form['category_id'])
+        product.Image = request.form['image']
+        product.Stock = int(request.form['stock'])
+
+        # Save the updated product to the database
+        storage.save()
+        flash('New product created successfully!', 'success')
+        
+        
+
+    return render_template('edit_product.html', product=product)
+
 
 
 @app.route('/api/products', methods=['GET'])

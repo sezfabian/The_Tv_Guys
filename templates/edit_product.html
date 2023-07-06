@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product</title>
+</head>
+<body>
+    <h1>Edit Product</h1>
+    <form method="POST" action="{{ url_for('edit_product', product_id=product.id) }}">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ product.Name }}" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ product.Description }}</textarea><br><br>
+
+        <label for="cost">Cost:</label>
+        <input type="number" id="cost" name="cost" step="0.01" value="{{ product.Cost }}" required><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" value="{{ product.Price }}" required><br><br>
+
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" value="{{ product.Brand }}" required><br><br>
+
+        <label for="size">Size:</label>
+        <input type="text" id="size" name="size" value="{{ product.Size }}" required><br><br>
+
+        <label for="os">Operating System:</label>
+        <input type="text" id="os" name="os" value="{{ product.Os }}" required><br><br>
+
+        <label for="dimensions">Dimensions:</label>
+        <input type="text" id="dimensions" name="dimensions" value="{{ product.Dimensions }}" required><br><br>
+
+        <label for="resolution">Resolution:</label>
+        <input type="text" id="resolution" name="resolution" value="{{ product.Resolution }}" required><br><br>
+
+        <label for="warranty">Warranty:</label>
+        <input type="number" id="warranty" name="warranty" value="{{ product.Warranty }}" required><br><br>
+
+        <label for="design">Design:</label>
+        <input type="text" id="design" name="design" value="{{ product.Design }}" required><br><br>
+
+        <label for="sub_cat_id">Sub Category ID:</label>
+        <input type="number" id="sub_cat_id" name="sub_cat_id" value="{{ product.Sub_cat_id }}" required><br><br>
+
+        <label for="category_id">Category ID:</label>
+        <input type="number" id="category_id" name="category_id" value="{{ product.Category_id }}" required><br><br>
+
+        <label for="image">Image:</label>
+        <input type="text" id="image" name="image" value="{{ product.Image }}" required><br><br>
+
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" value="{{ product.Stock }}" required><br><br>
+
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
+

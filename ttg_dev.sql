@@ -3,8 +3,7 @@ DROP DATABASE IF EXISTS ttg_dev_db;
 
 -- Create database + user if doesn't exist
 CREATE DATABASE IF NOT EXISTS ttg_dev_db;
-CREATE USER IF NOT EXISTS 'ttg_dev'@'localhost';
-SET PASSWORD FOR 'ttg_dev'@'localhost' = '2011cp';
+CREATE USER IF NOT EXISTS 'ttg_dev'@'localhost' IDENTIFIED BY '2011cp';
 GRANT ALL PRIVILEGES ON ttg_dev_db.* TO 'ttg_dev'@'localhost';
 GRANT SELECT ON performance_schema.* TO 'ttg_dev'@'localhost';
 FLUSH PRIVILEGES;
