@@ -11,7 +11,7 @@ import os
 sys.path.append('..')  # Add parent folder to module search path
 
 app = Flask(__name__, template_folder='templates/')
-CORS(app)
+CORS(app, origins=['http://localhost:8080'], supports_credentials=True)
 app.secret_key = os.urandom(24)
 
 # Temporary storage for registered users
@@ -24,29 +24,26 @@ def index():
     return render_template('index.html', products=products)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        phone = request.form['phone']
-        address = request.form['address']
-        pin = request.form['pin']
-        date_of_birth = request.form['date_of_birth']
-        password = request.form['password']
+    username = request.json['username']
+    email = request.json['email']
+    phone = request.json['phone']
+    address = request.json['address']
+    pin = request.json['pin']
+    date_of_birth = request.json['date_of_birth']
+    password = request.json['password']
 
-        # Create a new User instance with the provided data
-        user = User(User_name=username, User_mail=email, User_phone=phone, User_address=address,
-                    User_pin=pin, Date_of_birth=date_of_birth, User_pass=password)
+    # Create a new User instance with the provided data
+    user = User(User_name=username, User_mail=email, User_phone=phone, User_address=address,
+                User_pin=pin, Date_of_birth=date_of_birth, User_pass=password)
 
-        # Add the user to the list of registered users
-        storage.new(user)
-        storage.save()
+    # Add the user to the list of registered users
+    storage.new(user)
+    storage.save()
 
-        # Redirect to a success page or perform further actions
-        return redirect('/success')
-    else:
-        return render_template('register.html')
+    # Return a success response
+    return jsonify({'message': 'User registered successfully'})
 
 
 @app.route('/success')
