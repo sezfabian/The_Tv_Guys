@@ -3,5 +3,15 @@ import App from './App.vue'
 import router from './router'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+import store from './store';
 
-createApp(App).component('Carousel', Carousel).component('Slide', Slide).component('Pagination', Pagination).component('Navigation', Navigation).use(router).mount('#app')
+const app = createApp(App);
+
+app.use(store);
+app.use(router);
+app.component('Carousel', Carousel);
+app.component('Slide', Slide);
+app.component('Pagination', Pagination);
+app.component('Navigation', Navigation);
+
+app.mount('#app');

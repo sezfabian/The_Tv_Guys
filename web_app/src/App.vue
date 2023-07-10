@@ -4,31 +4,33 @@
     <router-link to="/" v-if="isWideScreen">Home</router-link> 
     <router-link to="/about" v-if="isWideScreen">About Us</router-link>
     <router-link to="/about" v-if="isWideScreen">Store</router-link>
-    <router-link to="/form" v-if="isWideScreen" @click="handleSignup()">Sign In</router-link>
-    <a  class="cart"><img class="icon" src="./assets/icons/cart-shopping-solid.svg"/></a>
-    <div class="hamburger">
-       <a href="#">
-          <div class="bar"></div>
-      </a>
+    <div  class="cart">
+      <p>{{ this.$store.state.cartItems.length }}</p>
+      <img class="icon" @click="handleCart()" src="./assets/icons/cart-shopping-solid.svg"/> 
+      <Cart v-if="showCart"/>
     </div>
+    <router-link to="/form" v-if="isWideScreen" @click="handleSignup()">Sign In</router-link>
+
   </nav>
   <router-view/>
 </template>
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import {hamburger} from './components/Hamburger.vue';
+import Hamburger from './components/Hamburger.vue';
 import SignupForm from './components/forms/SignupForm.vue';
+import Cart from './components/Cart.vue';
 
 
 export default {
   name: 'App',
   components: {
-    hamburger, SignupForm
+    Hamburger, SignupForm, Cart
   },
   setup() {
     const isWideScreen = ref(true);
     const showSignup = ref(false);
+    const showCart = ref(false);
 
     const handleResize = () => {
       isWideScreen.value = window.innerWidth > 1080; // Adjust the width condition here as well
@@ -48,13 +50,16 @@ export default {
     });
 
     return {
-      isWideScreen, showSignup
+      isWideScreen, showSignup, showCart
     };
   },
   methods: {
     handleSignup() {
       console.log('click')
       this.showSignup = !this.showSignup 
+    },
+    handleCart() {
+      this.showCart = !this.showCart
     }
   }
 };
@@ -173,8 +178,12 @@ nav a.router-link-exact-active {
 }
 
 .cart {
-  padding-top: 30px;
-  display: inline;
+  padding-top: 10px;
+  padding-bottom: 0px;
+  color: white;
+}
+.cart p{
+  padding-top: 0px;
 }
 
 .forms {

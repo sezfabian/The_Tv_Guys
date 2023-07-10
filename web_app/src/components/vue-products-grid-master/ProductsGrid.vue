@@ -1,16 +1,16 @@
 <template>
-<div class="container">
-  <Grid :length="products.length" :pageSize="10" :pageProvider="pageProvider" class="grid">
-    <template v-slot:placeholder="{ style, index }">
-      <div class="item" :style="style">
-        <img :src="products[index].Image" alt="https://i.postimg.cc/jdCTJHbh/placeholder-image.png" class="product-image" />
-        <h2>{{ products[index].Name }}</h2>
-        <div class="product-price">Ksh {{ products[index].Price }}</div>
-      </div>
-    </template>
-
-  </Grid>
-</div>
+  <div class="container">
+    <Grid :length="products.length" :pageSize="10" :pageProvider="pageProvider" class="grid">
+      <template v-slot:placeholder="{ style, index }">
+        <div class="item" :style="style">
+          <img :src="products[index].Image" alt="https://i.postimg.cc/jdCTJHbh/placeholder-image.png" class="product-image" />
+          <h2>{{ products[index].Name }}</h2>
+          <div class="product-price">Ksh {{ products[index].Price }}</div>
+          <button @click="addToCart(products[index])">Add to Cart</button>
+        </div>
+      </template>
+    </Grid>
+  </div>
 </template>
 
 <script>
@@ -42,6 +42,23 @@ export default {
       const start = (pageNumber - 1) * pageSize;
       const end = start + pageSize;
       return Promise.resolve(this.products.slice(start, end));
+    },
+    // Add product to cart
+    addToCart(product) {
+      const existingItem = this.$store.state.cartItems.find(item => item.id === product.id);
+      if (existingItem) {
+        // Item already exists in cart, increment quantity
+        this.$store.commit('incrementCartItemQuantity', existingItem.id);
+      } else {
+        // Item doesn't exist in cart, add as new item
+        const cartItem = {
+          id: product.id,
+          name: product.Name,
+          price: product.Price,
+          quantity: 1
+        };
+        this.$store.commit('addToCart', cartItem);
+    }
     }
   },
   mounted() {

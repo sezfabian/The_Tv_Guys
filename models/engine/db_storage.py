@@ -6,6 +6,8 @@ from models.base_model import BaseModel
 from models.user import User
 from models.category import Category
 from models.sub_categories import Sub_Category
+from models.order import Order
+from models.order_item import OrderItems
 from models.products import Product
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship

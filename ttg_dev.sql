@@ -81,78 +81,72 @@ CONSTRAINT `FK_4` FOREIGN KEY (`Category_id`) REFERENCES `Categories` (`id`) ON 
 );
 
 -- create orders table
-CREATE TABLE `Orders`
+CREATE TABLE IF NOT EXISTS `Orders`
 (
- `Order_id`     INT NOT NULL AUTO_INCREMENT ,
- `User_id`      INT NOT NULL ,
- `Order_time`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
- `Order_closed` ENUM('yes', 'no') NOT NULL ,
- `Total`        FLOAT ,
- `Paid`         FLOAT ,
- `Balance`      FLOAT AS (Total - Paid) ,
+ `id`            INT NOT NULL AUTO_INCREMENT ,
+ `User_id`       INT NOT NULL ,
+ `Order_date`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ `Total_amount`  FLOAT NOT NULL,
+ `Paid amount`   FLOAT,       
+ `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `updated_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 
-PRIMARY KEY (`Order_id`),
-KEY `FK_1` (`User_id`),
-CONSTRAINT `FK_3` FOREIGN KEY (`User_id`) REFERENCES `Users` (`User_id`)
+ PRIMARY KEY (`id`),
+ KEY `FK_User` (`User_id`),
+ CONSTRAINT `FK_User` FOREIGN KEY (`User_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- create order_items junction table
-CREATE TABLE `Order_items`
+CREATE TABLE IF NOT EXISTS `Order_items`
 (
- `Cart_id`  INT NOT NULL AUTO_INCREMENT ,
- `Order_id` INT NOT NULL ,
- `Prod_id`  INT NOT NULL ,
- `Quantity` INT NOT NULL ,
-
-PRIMARY KEY (`Cart_id`),
-KEY `FK_1` (`Order_id`),
-CONSTRAINT `FK_5` FOREIGN KEY (`Order_id`) REFERENCES `Orders` (`Order_id`) ON DELETE CASCADE,
-KEY `FK_2` (`Prod_id`), 
-CONSTRAINT `FK_6` FOREIGN KEY (`Prod_id`) REFERENCES `Products` (`Prod_id`)
+  `id`          INT NOT NULL AUTO_INCREMENT,
+  `Order_id`    INT NOT NULL,
+  `Product_id`  INT NOT NULL,
+  `Quantity`    INT NOT NULL,
+  `Price`       FLOAT NOT NULL,
+  `created_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY (`id`),
+  KEY `FK_Order` (`Order_id`),
+  KEY `FK_Product` (`Product_id`),
+  CONSTRAINT `FK_Order` FOREIGN KEY (`Order_id`) REFERENCES `Orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Product` FOREIGN KEY (`Product_id`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- create payment modes table
-CREATE TABLE `Payment_modes`
+CREATE TABLE IF NOT EXISTS `Payments`
 (
- `Mode_id`     INT NOT NULL AUTO_INCREMENT ,
- `Mode_name`   VARCHAR(45) NOT NULL ,
- `Description` VARCHAR(255) NOT NULL ,
+  `id`           INT NOT NULL AUTO_INCREMENT,
+  `Order_id`     INT NOT NULL,
+  `Payment_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Amount`       FLOAT NOT NULL,
+  `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-PRIMARY KEY (`Mode_id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_Order` (`Order_id`),
+  CONSTRAINT `FK_Order` FOREIGN KEY (`Order_id`) REFERENCES `Orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- create payments table
-CREATE TABLE `Payments`
+CREATE TABLE IF NOT EXISTS `Product_reviews`
 (
- `Payment_id` INT NOT NULL AUTO_INCREMENT ,
- `User_id`    INT NOT NULL ,
- `Mode_id`    INT NOT NULL ,
- `Reference`  VARCHAR(45) NOT NULL ,
- `Amount`     FLOAT NOT NULL ,
- `Order_id`   INT NOT NULL ,
- `Status`     ENUM('complete', 'pending') NOT NULL,
+  `id`          INT NOT NULL AUTO_INCREMENT,
+  `User_id`     INT NOT NULL,
+  `Product_id`  INT NOT NULL,
+  `Review`      VARCHAR(255) NOT NULL,
+  `Rating`      INT NOT NULL,
+  `Order_item_id` INT NOT NULL,
+  `created_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-PRIMARY KEY (`Payment_id`),
-KEY `FK_1` (`User_id`),
-KEY `FK_2` (`Mode_id`),
-KEY `FK_3` (`Order_id`),
-CONSTRAINT `FK_12` FOREIGN KEY (`User_id`) REFERENCES `Users` (`User_id`),
-CONSTRAINT `FK_13` FOREIGN KEY (`Mode_id`) REFERENCES `Payment_modes` (`Mode_id`),
-CONSTRAINT `FK_14` FOREIGN KEY (`Order_id`) REFERENCES `Orders` (`Order_id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_User` (`User_id`),
+  KEY `FK_Product` (`Product_id`),
+  KEY `FK_OrderItem` (`Order_item_id`),
+  CONSTRAINT `FK_User` FOREIGN KEY (`User_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Product` FOREIGN KEY (`Product_id`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_OrderItem` FOREIGN KEY (`Order_item_id`) REFERENCES `Order_items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- create reviews table
-CREATE TABLE `Reviews`
-(
- `Review_id` int NOT NULL AUTO_INCREMENT ,
- `User_id`   int NOT NULL ,
- `Prod_id`   int NOT NULL ,
- `Rating`    TINYINT UNSIGNED NOT NULL ,
- `Comments`  varbinary(255) ,
 
-PRIMARY KEY (`Review_id`),
-KEY `FK_1` (`User_id`),
-KEY `FK_2` (`Prod_id`),
-CONSTRAINT `FK_7` FOREIGN KEY (`User_id`) REFERENCES `Users` (`User_id`),
-CONSTRAINT `FK_8` FOREIGN KEY (`Prod_id`) REFERENCES `Products` (`Prod_id`)
-);
+
+

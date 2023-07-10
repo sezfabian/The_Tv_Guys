@@ -163,5 +163,47 @@ def get_products():
     return jsonify(products_list)
 
 
+@app.route('/orders', methods=['POST'])
+def create_order():
+    data = request.get_json()
+
+    # Extract order data from the request
+    user_id = data['user_id']
+    order_items_data = data['order_items']
+
+    # Calculate total order amount
+    total_amount = 0.0
+    for item_data in order_items_data:
+        quantity = item_data['quantity']
+        price = item_data['price']
+        total_amount += quantity * price
+
+    # Create the order
+    order = Order(user_id=user_id, total_amount=total_amount)
+    db.session.add(order)
+    db.session.commit()
+
+    # Create the order items and associate them with the order
+    order_items = []
+    for item_data in order_items_data:
+        product_id = item_data['product_id']
+        quantity = item_data['quantity']
+        price = item_data['price']
+
+        order_item = OrderItem(order_id=order.id, product_id=product_id, quantity=quantity, price=price)
+        order_items.append(order_item)
+        db.session.add(order_item)
+
+    db.session.commit()
+
+    response = {
+        'order': order.to_dict(),
+        'order_items': [item.to_dict() for item in order_items]
+    }
+
+    return jsonify(response), 201
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

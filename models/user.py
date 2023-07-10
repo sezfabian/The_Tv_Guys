@@ -3,6 +3,7 @@
 from models.base_model import Base
 from models.base_model import BaseModel
 from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
@@ -16,6 +17,9 @@ class User(BaseModel, Base):
     User_pin = Column(String(255), nullable=True)
     Date_of_birth = Column(Date, nullable=True)
     User_pass = Column(String(45), nullable=False)
+
+    User_orders = relationship(
+        "Order", backref="Users")
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

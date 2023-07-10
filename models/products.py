@@ -3,6 +3,7 @@
 from models.base_model import Base
 from models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class Product(BaseModel, Base):
@@ -24,6 +25,10 @@ class Product(BaseModel, Base):
     Category_id = Column(Integer, ForeignKey('Categories.id'))
     Image = Column(String(255))
     Stock = Column(Integer)
+
+
+    items = relationship(
+        "OrderItems", backref="Products")
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
