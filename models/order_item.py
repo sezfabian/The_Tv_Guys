@@ -5,7 +5,7 @@ from models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
-class OrderItems(Base):
+class OrderItems(BaseModel, Base):
     __tablename__ = 'Order_items'
 
     id = Column(Integer, primary_key=True)

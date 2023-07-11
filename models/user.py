@@ -16,7 +16,7 @@ class User(BaseModel, Base):
     User_address = Column(String(255), nullable=True)
     User_pin = Column(String(255), nullable=True)
     Date_of_birth = Column(Date, nullable=True)
-    User_pass = Column(String(45), nullable=False)
+    User_pass = Column(String(255), nullable=False)
 
     User_orders = relationship(
         "Order", backref="Users")

@@ -9,6 +9,8 @@ from models.user import User
 from models.category import Category
 from models.sub_categories import Sub_Category
 from models.products import Product
+from models.order import Order
+from models.order_item import OrderItems
 
 
 class TTGCommand(cmd.Cmd):
@@ -18,7 +20,8 @@ class TTGCommand(cmd.Cmd):
 
     classes = {
         'BaseModel': BaseModel, 'User': User, 'Product': Product,
-        'Category': Category, "Sub_Category": Sub_Category}
+        'Category': Category, "Sub_Category": Sub_Category,
+        "Order": Order, "OrderItems": OrderItems}
 
     def emptyline(self):
         """Ignore empty spaces."""

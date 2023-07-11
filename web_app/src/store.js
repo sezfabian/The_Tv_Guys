@@ -10,14 +10,17 @@ export default createStore({
   mutations: {
     addToCart(state, item) {
       state.cartItems.push(item);
+      state.totalItems++;
     },
     clearCartItems(state) {
       state.cartItems = [];
+      state.totalItems = 0;
     },
     incrementCartItemQuantity(state, itemId) {
         const cartItem = state.cartItems.find(item => item.id === itemId);
         if (cartItem) {
           cartItem.quantity++;
+          state.totalItems++;
         }
     },
     decrementCartItemQuantity(state, itemId) {
@@ -26,9 +29,11 @@ export default createStore({
         if (cartItem) {
           if (cartItem.quantity === 1){
             state.cartItems.splice(index,1);
+            state.totalItems--;
           }
           else{
             cartItem.quantity--;
+            state.totalItems--;
           }
         }
     }

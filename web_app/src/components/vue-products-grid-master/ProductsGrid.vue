@@ -75,6 +75,7 @@ export default {
   flex-direction: column;
   align-items: center;
   z-index: 100;
+  background-color: aliceblue;
 }
 
 .grid {

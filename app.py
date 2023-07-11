@@ -4,15 +4,20 @@ from models import storage
 from models.category import Category
 from models.sub_categories import Sub_Category
 from models.products import Product
-from flask import Flask, render_template, request, redirect, flash, jsonify
+from models.order import Order
+from models.order_item import OrderItems
+from flask import Flask, render_template, request, redirect, flash, jsonify, session
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from datetime import timedelta
 import sys
 import os
 sys.path.append('..')  # Add parent folder to module search path
 
 app = Flask(__name__, template_folder='templates/')
-CORS(app, origins=['http://localhost:8080'], supports_credentials=True)
+CORS(app, origins=['http://localhost:8080', 'http://192.168.100.15:8080'], supports_credentials=True)
 app.secret_key = os.urandom(24)
+bcrypt = Bcrypt(app)
 
 # Temporary storage for registered users
 users = []
@@ -22,6 +27,38 @@ users = []
 def index():
     products = storage.all(Product).values()
     return render_template('index.html', products=products)
+
+@app.route('/login', methods=['POST'])
+def login():
+    # Get the user's email and password
+    email = request.json['email']
+    password = request.json['password']
+
+    # Retrieve the user from the storage based on the provided email
+    ncil = storage.all(User).values()
+    user = next((user for user in ncil if user.User_mail == email), None)
+
+    if user and bcrypt.check_password_hash(user.User_pass, password):
+        # Set the user's ID in the session
+        session['user_id'] = user.id
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(days=7)
+
+        return jsonify({'user_id': user.id, 'message': 'Logged in successfully'})
+
+    return jsonify({'error': 'Invalid email or password'}), 400
+
+@app.route('/logout')
+def logout():
+    # Clear the user's session
+    session.clear()
+    return jsonify({'message': 'Logged out successfully'})
+
+@app.route('/api/session', methods=['GET'])
+def get_session_data():
+    user_id = session.get('user_id')
+    user = storage.get(User, user_id) if user_id else None
+    return jsonify({'user': user})
 
 
 @app.route('/register', methods=['POST'])
@@ -34,9 +71,19 @@ def register():
     date_of_birth = request.json['date_of_birth']
     password = request.json['password']
 
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    # Check if the user already exists
+    ncil = storage.all(User).values()
+    user = next((user for user in ncil if user.User_mail == email), None)
+    if user: return jsonify({'error': 'User with this email already exists'}), 400
+    user = next((user for user in ncil if user.User_phone == phone), None)
+    if user: return jsonify({'error': 'User with this phone number already exists'}), 400
+
     # Create a new User instance with the provided data
     user = User(User_name=username, User_mail=email, User_phone=phone, User_address=address,
-                User_pin=pin, Date_of_birth=date_of_birth, User_pass=password)
+                User_pin=pin, Date_of_birth=date_of_birth, User_pass=hashed_password)
 
     # Add the user to the list of registered users
     storage.new(user)
@@ -163,7 +210,7 @@ def get_products():
     return jsonify(products_list)
 
 
-@app.route('/orders', methods=['POST'])
+@app.route('/api/orders', methods=['POST'])
 def create_order():
     data = request.get_json()
 
@@ -180,8 +227,8 @@ def create_order():
 
     # Create the order
     order = Order(user_id=user_id, total_amount=total_amount)
-    db.session.add(order)
-    db.session.commit()
+    storage.new(order)
+    storage.save()
 
     # Create the order items and associate them with the order
     order_items = []
@@ -190,11 +237,11 @@ def create_order():
         quantity = item_data['quantity']
         price = item_data['price']
 
-        order_item = OrderItem(order_id=order.id, product_id=product_id, quantity=quantity, price=price)
+        order_item = OrderItems(order_id=order.id, product_id=product_id, quantity=quantity, price=price)
         order_items.append(order_item)
-        db.session.add(order_item)
+        storage.new(order_item)
 
-    db.session.commit()
+    storage.save()
 
     response = {
         'order': order.to_dict(),

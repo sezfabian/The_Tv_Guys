@@ -5,13 +5,13 @@
     <router-link to="/about" v-if="isWideScreen">About Us</router-link>
     <router-link to="/about" v-if="isWideScreen">Store</router-link>
     <div  class="cart">
-      <p>{{ this.$store.state.cartItems.length }}</p>
+      <p>{{ this.$store.state.totalItems }}</p>
       <img class="icon" @click="handleCart()" src="./assets/icons/cart-shopping-solid.svg"/> 
       <Cart v-if="showCart"/>
     </div>
-    <router-link to="/form" v-if="isWideScreen" @click="handleSignup()">Sign In</router-link>
-
+    <a  v-if="isWideScreen" @click="handleLogIn">Log In</a>
   </nav>
+  <LoginForm v-if="showLogin"/>
   <router-view/>
 </template>
 
@@ -19,17 +19,17 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import Hamburger from './components/Hamburger.vue';
 import SignupForm from './components/forms/SignupForm.vue';
+import LoginForm from './components/forms/LoginForm.vue';
 import Cart from './components/Cart.vue';
-
 
 export default {
   name: 'App',
   components: {
-    Hamburger, SignupForm, Cart
+    Hamburger, SignupForm, Cart, LoginForm
   },
   setup() {
     const isWideScreen = ref(true);
-    const showSignup = ref(false);
+    const showLogin = ref(false);
     const showCart = ref(false);
 
     const handleResize = () => {
@@ -50,13 +50,13 @@ export default {
     });
 
     return {
-      isWideScreen, showSignup, showCart
+      isWideScreen, showLogin, showCart
     };
   },
   methods: {
-    handleSignup() {
+    handleLogIn() {
       console.log('click')
-      this.showSignup = !this.showSignup 
+      this.showLogin = !this.showLogin
     },
     handleCart() {
       this.showCart = !this.showCart
@@ -194,4 +194,5 @@ nav a.router-link-exact-active {
 .products {
   z-index: 1000;
 }
+
 </style>

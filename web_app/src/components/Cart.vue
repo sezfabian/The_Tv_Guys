@@ -3,7 +3,7 @@
     <h3>My Cart</h3>
     <ul>
       <li v-for="item in cartItems" :key="item.id">
-        {{ item.quantity }} - {{ item.name }} @ {{ item.price }} - Ksh {{ item.quantity * item.price }}
+        <p>{{ item.quantity }} x {{ item.name }} @ {{ item.price }} -&nbsp;<span style="color: red;"> <b>Ksh {{ item.quantity * item.price }}</b> </span></p>
         <button @click="incrementQuantity(item)">+</button>
         <button @click="decrementQuantity(item)">-</button> 
       </li>
@@ -11,6 +11,7 @@
      <p>Total Quantity: {{ totalQuantity }}</p>
      <p>Total Cash: Ksh {{ totalCash }}</p>
     <button @click="clearCart">Clear Cart</button>
+    <button @click="confirmOrder">Place Order</button>
   </div>
 </template>
 
@@ -36,6 +37,38 @@ export default {
     },
     decrementQuantity(item) {
       this.$store.commit('decrementCartItemQuantity', item.id);
+    },
+    confirmOrder() {
+      const confirmMessage = "Are you sure you want to place this order?";
+      if (window.confirm(confirmMessage)) {
+        const orderData = {
+          user_id: 1, // Replace with the actual user ID
+          order_items: this.cartItems.map(item => ({
+            product_id: item.id,
+            quantity: item.quantity,
+            price: item.price
+          }))
+        };
+        // Send the order request to the server
+        fetch('http://127.0.0.1:5000/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderData)
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Handle the response data as needed
+            console.log(data);
+            // Clear the cart after successful order placement
+            this.clearCart();
+          })
+          .catch(error => {
+            console.error(error);
+            // Handle the error
+          });
+      }
     }
   }
 };
@@ -47,7 +80,7 @@ export default {
   align-content: space-between;
   top: 130px;
   right: 220px;
-  background-color: rgba(1, 7, 36, 0.788);
+  background-color: whitesmoke;
   border-radius: 10px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -55,13 +88,14 @@ export default {
 }
 
 .cart li {
-    background: white;
-    text-decoration-style: none;
+    list-style: none;
     color: black;
     font-size: 20px;
 }
 
 button {
-  margin-top: 10px;
+  margin-top: 0px;
+  width: 150px;
+  height: 40px;
 }
 </style>

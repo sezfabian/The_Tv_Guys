@@ -45,7 +45,7 @@ export default {
   width: 100%;
   height: 58vh;
   z-index: -5;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   opacity: 1;
   }
 

@@ -61,7 +61,7 @@ export default {
         })
         .catch(error => {
           // Handle error response
-          console.error(error);
+          console.error(error.response.data);
         });
     }
   }

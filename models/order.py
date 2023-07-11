@@ -14,6 +14,8 @@ class Order(BaseModel):
     order_date = Column(DateTime, nullable=False, default=datetime.now)
     total_amount = Column(Float, nullable=False)
     paid_amount = Column(Float)
+    processed = Column(Integer, nullable=False, default=0)
+    cancelled = Column(Integer, nullable=False, default=0)
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
