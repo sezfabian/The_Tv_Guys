@@ -13,4 +13,9 @@ sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install --lts
-
+sudo apt -y upgrade
+sudo apt -y install python3
+sudo apt -y install python3-pip
+sudo pip install flask
+sudo pip install -U flask-cors
+sudo pip install pymysql

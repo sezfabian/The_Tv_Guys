@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+import pymysql
 
 classes = {"User": User, "Category": Category,
            "Sub_Category": Sub_Category, "Product": Product}
@@ -30,7 +31,7 @@ class DBStorage:
 
     def __init__(self):
         """Initialize a new DBStorage instance."""
-        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
+        self.__engine = create_engine("mysql+pymysql://{}:{}@{}/{}".
                                       format('ttg_dev', '2011cp',
                                              'localhost', 'ttg_dev_db'),
                                       pool_pre_ping=True)
