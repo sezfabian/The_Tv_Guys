@@ -2,13 +2,14 @@
   <Carousel :itemsToShow="3" :wrapAround="true" :transition="500" class="carousel">
     <button @click="goToNextSlide">Next</button>
     <Slide v-for="product in products" :key="product.id">
-        
+      <div @click="openProduct(product)">
         <img :src="product.Image" class="slide-img-top" alt="Product Image" width="500">
             
         <div class="card">
             <h3 class="slide-header">{{ product.Name }}</h3>
             <p class="pricing">Ksh {{ product.Price - 1}} </p>
         </div>
+      </div>
     </Slide>
     <button @click="goToNextSlide">Next</button>
   </Carousel>
@@ -19,6 +20,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { Carousel, Slide } from 'vue3-carousel';
 import axios from 'axios';
 import 'vue3-carousel/dist/carousel.css';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ProductCarousel',
@@ -28,6 +30,7 @@ export default defineComponent({
   },
   setup() {
     const products = ref([]);
+    const router = useRouter();
 
     // Fetch products from API
     const fetchProducts = async () => {
@@ -39,11 +42,19 @@ export default defineComponent({
       }
     };
 
+    const openProduct = (product) => {
+      // Navigate to the product view page for the clicked product
+      // and pass the product ID as a route parameter
+      console.log(product.id)
+      router.push({ name: 'ProductView', params: { id: product.id } });
+    };
+
     onMounted(() => {
       fetchProducts();
     });
 
     return {
+      openProduct,
       products,
     };
   },

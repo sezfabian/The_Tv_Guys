@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import FormView from '../views/FormView.vue'
+import ProductView from '../views/ProductView.vue'
+import MyOrdersView from '../views/MyOrdersView.vue'
 
 const routes = [
   {
@@ -20,8 +22,17 @@ const routes = [
     path: '/form',
     name: 'form',
     component: FormView
+  },
+  {
+    path: '/product/:id', 
+    name: 'ProductView',
+    component: ProductView,
+  },
+  {
+    path: '/myorders',
+    name: 'MyOrdersView',
+    component: MyOrdersView
   }
-
 ]
 
 const router = createRouter({

@@ -6,8 +6,9 @@
       <input type="email" v-model="email" required>
       <label for="password">Password</label>
       <input type="password" v-model="password" required>
+      <div v-if="passwordError" class="error">{{ passwordError }}</div>
       <button type="submit">Login</button>
-      <p>Don't have an account? <router-link to="/form">Sign up</router-link></p>
+      <p @click="this.$emit('loginFormClosed')">Don't have an account? <router-link to="/form">Sign up</router-link></p>
     </form>
   </div>
 </template>
@@ -19,7 +20,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      passwordError: null,
     };
   },
   methods: {
@@ -31,13 +33,21 @@ export default {
       .then(response => {
         // Handle successful login
         console.log(response.data);
-        // Redirect to a new page or perform other actions
+        this.passwordError = null;
+        console.log(response.data['name'])
+        this.$store.commit('setUser', {
+                     id: response.data['user_id'],
+                     username: response.data['name'],
+                     usermail: response.data['email']
+              });
+        this.$emit('loginFormClosed');
       })
       .catch(error => {
         // Handle login error
         console.error(error.response.data);
+        this.passwordError = error.response.data['error'];
       });
-    }
+    },
   }
 };
 </script>

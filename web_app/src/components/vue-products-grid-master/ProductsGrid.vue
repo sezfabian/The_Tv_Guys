@@ -3,8 +3,8 @@
     <Grid :length="products.length" :pageSize="10" :pageProvider="pageProvider" class="grid">
       <template v-slot:placeholder="{ style, index }">
         <div class="item" :style="style">
-          <img :src="products[index].Image" alt="https://i.postimg.cc/jdCTJHbh/placeholder-image.png" class="product-image" />
-          <h2>{{ products[index].Name }}</h2>
+          <img :src="products[index].Image" alt="https://i.postimg.cc/jdCTJHbh/placeholder-image.png" class="product-image" @click="openProduct(products[index])"/>
+          <h2 @click="openProduct(products[index])">{{ products[index].Name }}</h2>
           <div class="product-price">Ksh {{ products[index].Price }}</div>
           <button @click="addToCart(products[index])">Add to Cart</button>
         </div>
@@ -16,13 +16,15 @@
 <script>
 import Grid from "vue-virtual-scroll-grid";
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
 export default {
   name: "Home",
   components: { Grid },
   data() {
     return {
-      products: []
+      products: [],
+      router: useRouter()
     };
   },
   methods: {
@@ -36,6 +38,10 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    },
+    openProduct(product) {
+      console.log(product.id)
+      this.router.push({ name: 'ProductView', params: { id: product.id } });
     },
     // Return items for the given page
     pageProvider(pageNumber, pageSize) {

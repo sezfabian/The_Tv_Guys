@@ -43,7 +43,7 @@ export default {
   top: +50%;
   left: 0;
   width: 100%;
-  height: 58vh;
+  height: 74vh;
   z-index: -5;
   background-color: white;
   opacity: 1;

@@ -28,6 +28,7 @@ def index():
     products = storage.all(Product).values()
     return render_template('index.html', products=products)
 
+
 @app.route('/login', methods=['POST'])
 def login():
     # Get the user's email and password
@@ -44,7 +45,7 @@ def login():
         session.permanent = True
         app.permanent_session_lifetime = timedelta(days=7)
 
-        return jsonify({'user_id': user.id, 'message': 'Logged in successfully'})
+        return jsonify({'user_id': user.id, 'email': user.User_mail, 'name': user.User_name, 'message': 'Logged in successfully'})
 
     return jsonify({'error': 'Invalid email or password'}), 400
 
@@ -173,10 +174,8 @@ def edit_product(product_id):
         # Save the updated product to the database
         storage.save()
         flash('New product created successfully!', 'success')
-        
-        
 
-    return render_template('edit_product.html', product=product)
+    return jsonify(product.to_dict())
 
 
 
@@ -240,13 +239,49 @@ def create_order():
         order_item = OrderItems(order_id=order.id, product_id=product_id, quantity=quantity, price=price)
         order_items.append(order_item)
         storage.new(order_item)
-
-    storage.save()
+        storage.save()
 
     response = {
         'order': order.to_dict(),
         'order_items': [item.to_dict() for item in order_items]
     }
+
+    return jsonify(response)
+
+
+@app.route('/api/orders/<int:user_id>', methods=['GET'])
+def get_orders_by_user_id(user_id):
+    orders = storage.all(Order).values()
+    order_data = []
+
+    for order in orders:
+        if order.user_id == user_id:
+            order_items = storage.all(OrderItems).values()
+            order_item_data = []
+
+            for order_item in order_items:
+                if order_item.order_id == order.id:
+                    order_item_data.append({
+                        'id': order_item.id,
+                        'order_id': order_item.order_id,
+                        'product_id': order_item.product_id,
+                        'quantity': order_item.quantity,
+                        'price': order_item.price
+                    })
+
+            order_data.append({
+                'id': order.id,
+                'user_id': order.user_id,
+                'order_date': order.order_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'total_amount': order.total_amount,
+                'paid_amount': order.paid_amount,
+                'processed': order.processed,
+                'cancelled': order.cancelled,
+                'order_items': order_item_data
+                })
+
+    return jsonify(order_data)
+    
 
     return jsonify(response), 201
 

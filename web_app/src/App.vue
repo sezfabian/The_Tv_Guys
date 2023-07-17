@@ -1,17 +1,18 @@
 <template>
   <nav>
     <img src="./assets/logo.png" class="logo" alt="logo">
-    <router-link to="/" v-if="isWideScreen">Home</router-link> 
+    <router-link to="/" >Home</router-link> 
     <router-link to="/about" v-if="isWideScreen">About Us</router-link>
-    <router-link to="/about" v-if="isWideScreen">Store</router-link>
+    <router-link to="/myorders" v-if="this.$store.state.username">My Orders</router-link>
     <div  class="cart">
       <p>{{ this.$store.state.totalItems }}</p>
       <img class="icon" @click="handleCart()" src="./assets/icons/cart-shopping-solid.svg"/> 
       <Cart v-if="showCart"/>
     </div>
-    <a  v-if="isWideScreen" @click="handleLogIn">Log In</a>
+    <a v-if="!this.$store.state.username" @click="handleLogIn">Log In</a>
+    <a v-if="this.$store.state.username" @click="handleLogOut">Sign Out</a>
   </nav>
-  <LoginForm v-if="showLogin"/>
+  <LoginForm v-if="showLogin" @loginFormClosed="handleLogIn"/>
   <router-view/>
 </template>
 
@@ -54,12 +55,23 @@ export default {
     };
   },
   methods: {
+    /**
+     * Handles the log in action.
+     * stores user session data
+     */
     handleLogIn() {
       console.log('click')
       this.showLogin = !this.showLogin
     },
     handleCart() {
       this.showCart = !this.showCart
+    },
+    handleLogOut() {
+      this.$store.commit('setUser', {
+                     id: null,
+                     username: null,
+                     usermail: null
+              });
     }
   }
 };
@@ -79,7 +91,7 @@ export default {
 }
 
 body {
-  background-image: url("./assets/background.jpg");
+  background-image: url("./assets/van.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   width: 100vw;

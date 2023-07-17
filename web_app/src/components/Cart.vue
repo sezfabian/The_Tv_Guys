@@ -1,6 +1,8 @@
 <template>
   <div class="cart">
-    <h3>My Cart</h3>
+    <div class='title'>
+      <h3> User: {{ user }} Cart Items : {{ totalQuantity }}</h3>
+    </div>
     <ul>
       <li v-for="item in cartItems" :key="item.id">
         <p>{{ item.quantity }} x {{ item.name }} @ {{ item.price }} -&nbsp;<span style="color: red;"> <b>Ksh {{ item.quantity * item.price }}</b> </span></p>
@@ -8,7 +10,6 @@
         <button @click="decrementQuantity(item)">-</button> 
       </li>
     </ul>
-     <p>Total Quantity: {{ totalQuantity }}</p>
      <p>Total Cash: Ksh {{ totalCash }}</p>
     <button @click="clearCart">Clear Cart</button>
     <button @click="confirmOrder">Place Order</button>
@@ -26,6 +27,12 @@ export default {
     },
     totalCash() {
       return this.cartItems.reduce((total, item) => total + item.quantity * item.price, 0);
+    },
+    user() {
+      return this.$store.state.username;
+    },
+    userId() {
+      return this.$store.state.userid;
     }
   },
   methods: {
@@ -42,7 +49,7 @@ export default {
       const confirmMessage = "Are you sure you want to place this order?";
       if (window.confirm(confirmMessage)) {
         const orderData = {
-          user_id: 1, // Replace with the actual user ID
+          user_id: this.userId,
           order_items: this.cartItems.map(item => ({
             product_id: item.id,
             quantity: item.quantity,
@@ -76,6 +83,7 @@ export default {
 
 <style scoped>
 .cart {
+  color: black;
   position: absolute;
   align-content: space-between;
   top: 130px;

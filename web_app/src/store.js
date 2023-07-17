@@ -4,7 +4,10 @@ export default createStore({
   state() {
     return {
       cartItems: [],
-      totalItems: 0
+      totalItems: 0,
+      userid: null,
+      username: null,
+      usermail: null,
     };
   },
   mutations: {
@@ -36,7 +39,12 @@ export default createStore({
             state.totalItems--;
           }
         }
-    }
-
+    },
+    setUser(state, payload) {
+      console.log(payload.id, payload.username, payload.usermail);
+      state.userid = payload.id;
+      state.username = payload.username;
+      state.usermail = payload.usermail;
+    },
   }
 });
