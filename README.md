@@ -3,11 +3,21 @@ An ecommerce webapp, specializing in all things tv.
 
 ## Language
 
-The project is built in Python3, Vue  and MyriaDB/MySQL dbms.
+This project is built in 
 
-## Usage
+- Python3 with Flask
+- MariaDB
+- Vue3.js
+
+## Setup
 
 Clone this repository
 
-run install.sh in terminal to install dependencies
-run 
+Run "setup2.sh" in terminal to install dependencies
+
+## Usage
+
+Run "Run_server.sh" in terminal
+
+This starts the Flask API app that acts as a server to the frontend web_app
+
