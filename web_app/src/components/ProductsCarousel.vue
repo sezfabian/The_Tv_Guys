@@ -31,6 +31,7 @@ export default defineComponent({
   setup() {
     const products = ref([]);
     const router = useRouter();
+    let currentSlideIndex = ref(0); // Track the current slide index
 
     // Fetch products from API
     const fetchProducts = async () => {
@@ -42,6 +43,11 @@ export default defineComponent({
       }
     };
 
+     // Function to go to the next slide
+    const goToNextSlide = () => {
+      currentSlideIndex.value = (currentSlideIndex.value + 1) % products.value.length;
+    };
+
     const openProduct = (product) => {
       // Navigate to the product view page for the clicked product
       // and pass the product ID as a route parameter
@@ -51,11 +57,13 @@ export default defineComponent({
 
     onMounted(() => {
       fetchProducts();
+      setInterval(goToNextSlide, 5000);
     });
 
     return {
       openProduct,
       products,
+      goToNextSlide,
     };
   },
 });

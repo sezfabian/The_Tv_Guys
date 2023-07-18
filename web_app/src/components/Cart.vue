@@ -12,7 +12,7 @@
     </ul>
      <p>Total Cash: Ksh {{ totalCash }}</p>
     <button @click="clearCart">Clear Cart</button>
-    <button @click="confirmOrder">Place Order</button>
+    <button @click="confirmOrder" v-if="userId">Place Order</button>
   </div>
 </template>
 
