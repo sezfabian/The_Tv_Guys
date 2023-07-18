@@ -1,4 +1,5 @@
 # The_Tv_Guys
+![alt text](https://i.postimg.cc/BbJsrST3/ttg1.png)
 An ecommerce webapp, specializing in all things tv.
 
 ## Language
@@ -15,9 +16,22 @@ Clone this repository
 
 Run "setup2.sh" in terminal to install dependencies
 
+(bash setup2.sh)
+
 ## Usage
 
-Run "Run_server.sh" in terminal
+In terminal
+
+(bash run_server.sh)
 
 This starts the Flask API app that acts as a server to the frontend web_app
 
+(bash run_web_app.sh)
+
+Starts the webapp on localhost:8080
+
+![alt text](https://i.postimg.cc/BbJsrST3/ttg1.png)
+
+![alt text](https://i.postimg.cc/FKnTtD0H/ttg4.png)
+
+![alt text](https://i.postimg.cc/WbrCGLg6/ttg3.png)
