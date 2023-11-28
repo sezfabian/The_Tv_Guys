@@ -1,4 +1,6 @@
 # The_Tv_Guys
+See .[live demo](https://thetvguys.netlify.app/about)
+
 ![alt text](https://i.postimg.cc/BbJsrST3/ttg1.png)
 An ecommerce webapp, specializing in all things tv.
 
